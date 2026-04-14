@@ -40,7 +40,17 @@ def run(drive, sensor):
         action = FEEDBACK_LAW[reading]
 
         if action is None:
-            turn_around(drive, sensor)
+            current_average = sensor.get_average()
+
+            if current_average == [0, 1, 0]:
+                turn_around(drive, sensor)
+            elif current_average[2] == 1:
+                drive.drive(DriveSystem.Styles.VEER, DriveSystem.Directions.RIGHT)
+            elif current_average[0] == 1:
+                drive.drive(DriveSystem.Styles.VEER, DriveSystem.Directions.LEFT)
+            else:
+                turn_around(drive, sensor)
+            
         else:
             direction, style = action
             drive.drive(style, direction)
