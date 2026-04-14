@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 #
 #   irdemo.py
 #
@@ -14,9 +13,9 @@ import time
 import traceback
 
 # Define the IR pins.
-PIN_IR_LEFT   = 14      # Default GPIO Channel for Left   IR Detector
+PIN_IR_LEFT   = 18      # Default GPIO Channel for Left   IR Detector
 PIN_IR_MIDDLE = 15      # Default GPIO Channel for Middle IR Detector
-PIN_IR_RIGHT  = 18      # Default GPIO Channel for Right  IR Detector
+PIN_IR_RIGHT  = 14      # Default GPIO Channel for Right  IR Detector
 
 
 #
@@ -24,12 +23,11 @@ PIN_IR_RIGHT  = 18      # Default GPIO Channel for Right  IR Detector
 #
 if __name__ == "__main__":
 
-    ############################################################
     # Prepare the GPIO interface/connection (to command the motors).
     print("Setting up the GPIO...")
     io = pigpio.pi()
     if not io.connected:
-        print("Unable to connection to pigpio daemon!")
+        print("Unable to connection to pigpio!")
         sys.exit(0)
     print("GPIO ready...")
 
@@ -41,7 +39,6 @@ if __name__ == "__main__":
     print("Sensors ready...")
 
 
-    ############################################################
     # Read.
     # Place in a try-except structure, so we can shut down cleanly.
     try:
@@ -59,7 +56,6 @@ if __name__ == "__main__":
         traceback.print_exc()
 
 
-    ############################################################
     # Turn Off.
     # Nothing to do for the sensors.
     print("Turning off...")

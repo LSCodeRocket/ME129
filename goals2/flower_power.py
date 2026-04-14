@@ -10,12 +10,13 @@ def run_flower_power(drive, sensor):
     drive.drive(DriveSystem.Styles.STRAIGHT, None)
     while time.time() <= t + 4:
         print(time.time())
-
     drive.brake()
     input("Replaced?")
 
     for dir in list(DriveSystem.Directions):
         for style in list(DriveSystem.Styles):
+            if style == DriveSystem.Styles.STRAIGHT:
+                continue 
             t = time.time()
             while time.time() <= t + 4:
                 drive.drive(style, dir)
@@ -31,9 +32,9 @@ PIN_LEFT_MOTOR_2 = 5
 PIN_RIGHT_MOTOR_1 = 8
 PIN_RIGHT_MOTOR_2 = 7
 
-PIN_LEFT_IR = 14
+PIN_LEFT_IR = 18
 PIN_MIDDLE_IR = 15
-PIN_RIGHT_IR = 18
+PIN_RIGHT_IR = 14
 
 
 

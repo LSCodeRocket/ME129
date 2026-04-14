@@ -83,10 +83,25 @@ class Styles(Enum):
 
 class DriveSystem:
     DRIVE_DICT = {
-        (None, Styles.STRAIGHT) : [0.65, 0.65],
-        (Directions.RIGHT, Styles.VEER) : [0.77, 0.67*1.08],
-        (Directions.RIGHT, Styles.STRAIGHT) : [0.92, 1],
-        (Directions.RIGHT, Styles.STRAIGHT) : [0.92, 1],
+
+        # STRAIGHT 
+        (None, Styles.STRAIGHT) : [0.68, 0.68],
+        (Directions.RIGHT, Styles.STRAIGHT) : [0.68, 0.68],
+        (Directions.LEFT, Styles.STRAIGHT) : [0.68, 0.68],
+
+        #RIGHT TURNS 
+        (Directions.RIGHT, Styles.VEER) : [0.78, 0.68],
+        (Directions.RIGHT, Styles.STEER) : [0.79, 0.63],
+        (Directions.RIGHT, Styles.TURN) : [0.80, 0.47],
+        (Directions.RIGHT, Styles.HOOK) : [0.80, 0],
+        (Directions.RIGHT, Styles.SPIN) : [0.66, -0.66],
+
+        #LEFT TURNS 
+        (Directions.LEFT, Styles.VEER) : [0.69, 0.78],
+        (Directions.LEFT, Styles.STEER) : [0.63, 0.79],
+        (Directions.LEFT, Styles.TURN) : [0.47, 0.80],
+        (Directions.LEFT, Styles.HOOK) : [0.0, 0.77],
+        (Directions.LEFT, Styles.SPIN) : [-0.66, 0.66],
         }
     
     
