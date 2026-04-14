@@ -14,7 +14,7 @@ PIN_IR_MIDDLE = 15
 PIN_IR_RIGHT  = 14
 
 FEEDBACK_LAW = {
-    (0, 1, 0) : (None,                        DriveSystem.Styles.STRAIGHT),  # Centered
+    (0, 1, 0) : (None, DriveSystem.Styles.STRAIGHT),  # Centered
     (0, 1, 1) : (DriveSystem.Directions.RIGHT, DriveSystem.Styles.TURN),    # Slight Left
     (0, 0, 1) : (DriveSystem.Directions.RIGHT, DriveSystem.Styles.HOOK),     # Far Left
     (1, 1, 0) : (DriveSystem.Directions.LEFT,  DriveSystem.Styles.TURN),    # Slight Right
