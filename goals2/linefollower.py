@@ -41,13 +41,14 @@ def run(drive, sensor):
 
         if action is None:
             current_average = sensor.get_average()
+            print (current_average)
 
             if current_average == [0, 1, 0]:
                 turn_around(drive, sensor)
             elif current_average[2] == 1:
-                drive.drive(DriveSystem.Styles.VEER, DriveSystem.Directions.RIGHT)
+                drive.drive(DriveSystem.Styles.SPIN, DriveSystem.Directions.RIGHT)
             elif current_average[0] == 1:
-                drive.drive(DriveSystem.Styles.VEER, DriveSystem.Directions.LEFT)
+                drive.drive(DriveSystem.Styles.SPIN, DriveSystem.Directions.LEFT)
             else:
                 turn_around(drive, sensor)
             
