@@ -20,15 +20,8 @@ class Motor:
         self.MAX_PWM = 255
 
         self.init_PWM(1000)
-
-        self.set_PWM_dutycycles(self.MAX_PWM, self.MAX_PWM)
-
-    def set_PWM_dutycycles(self, duty1, duty2):
-        # initializes the motor to stop (both pins at 255) 
-        # Set all pins to their maximum value, which turns on motor
-        # driver but has no effective output (brake).
-        self.io.set_PWM_dutycycle(self.PIN_ID_1, duty1)
-        self.io.set_PWM_dutycycle(self.PIN_ID_2, duty2)
+        self.io.set_PWM_dutycycle(self.PIN_ID_1, self.MAX_PWM)
+        self.io.set_PWM_dutycycle(self.PIN_ID_2, self.MAX_PWM)
 
     def init_PWM(self, FREQ):
         # Set up the four pins as output (OUTPUT MODE).
@@ -60,7 +53,6 @@ class Motor:
 
         self.io.set_PWM_dutycycle(self.PIN_ID_1, pin1_duty)
         self.io.set_PWM_dutycycle(self.PIN_ID_2, pin2_duty)
-        # print(f"Duty 1: {int(pin1_duty)}, Duty 2: {int(pin2_duty)}")
 
     # sets both PWM duty cycles to 0, which disconnects/de-energizes the motor
     # Clear the PINs (commands).
@@ -68,11 +60,12 @@ class Motor:
         self.io.set_PWM_dutycycle(self.PIN_ID_1, 0)
         self.io.set_PWM_dutycycle(self.PIN_ID_2, 0)
 
-
+# Defining LEFT and RIGHT with constant values for for loop
 class Directions(Enum):
     LEFT = -1
     RIGHT = 1
 
+# Defining for each STYLE with constant values for for loop
 class Styles(Enum):
     STRAIGHT = 0
     VEER = 1
@@ -80,6 +73,13 @@ class Styles(Enum):
     TURN = 3
     HOOK = 4
     SPIN = 5
+
+# Dictionary/Look up table that has the tuned setlevel values for each motor and sets their behavior 
+# for each direction and style. 
+# While STRAIGHT doesn't have a direction, we had to add (Right, Straight) and (Left, Straight) for the 
+# nested for loop in flower_power.py that goes through each direction and style.
+# However, a nested if statment accounts for this and ignores the additonal STRAIGHT keys in the dictionary
+# and only goes straight once. 
 
 class DriveSystem:
     DRIVE_DICT = {
@@ -104,22 +104,26 @@ class DriveSystem:
         (Directions.LEFT, Styles.SPIN) : [-0.66, 0.66],
         }
     
-    
+    # Initializing the motors and setting motor pins for signals 
     def __init__(self, io, pin1_left, pin2_left, pin1_right, pin2_right):
         self.left_motor = Motor(io, pin1_left, pin2_left)
         self.right_motor = Motor(io, pin1_right, pin2_right)
 
+    # Inputting corresponding setlevel()s for each motor depending on which 
+    # style and direction is inputted in reference to which key in the DRIVE_DICT.
+    # The value of the corresponding keys is as a tuple is inputted into the motors 
     def drive(self, style, direction):
         motor_powers = self.DRIVE_DICT[(direction, style)]
 
         self.left_motor.setlevel(motor_powers[0])
         self.right_motor.setlevel(motor_powers[1])
 
-    
+    # motors charged but stopped (no rotational output)
     def brake(self):
         self.left_motor.setlevel(0)
         self.right_motor.setlevel(0)
 
+    # motors discharged and completely off 
     def deactivate(self):
         self.left_motor.off()
         self.right_motor.off()

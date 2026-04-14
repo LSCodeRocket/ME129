@@ -4,6 +4,7 @@ import traceback
 import DriveSystem
 import LineSensor
 
+# Initializing Pins 
 PIN_LEFT_MOTOR_1 = 6
 PIN_LEFT_MOTOR_2 = 5
 PIN_RIGHT_MOTOR_1 = 8
@@ -13,17 +14,19 @@ PIN_IR_LEFT   = 18
 PIN_IR_MIDDLE = 15
 PIN_IR_RIGHT  = 14
 
+# Outlines behaviors and calls DRIVE_DICT look up table corresponding to each detection
 FEEDBACK_LAW = {
     (0, 1, 0) : (None, DriveSystem.Styles.STRAIGHT),  # Centered
     (0, 1, 1) : (DriveSystem.Directions.RIGHT, DriveSystem.Styles.TURN),    # Slight Left
     (0, 0, 1) : (DriveSystem.Directions.RIGHT, DriveSystem.Styles.HOOK),     # Far Left
     (1, 1, 0) : (DriveSystem.Directions.LEFT,  DriveSystem.Styles.TURN),    # Slight Right
     (1, 0, 0) : (DriveSystem.Directions.LEFT,  DriveSystem.Styles.HOOK),     # Far Right
-    (0, 0, 0) : None,                                                          # Off tape -> stop
-    (1, 1, 1) : (None, DriveSystem.Styles.STRAIGHT),  # All on straight
+    (0, 0, 0) : None,                                 # Off tape -> special cases (turn around or turn + continue)
+    (1, 1, 1) : (None, DriveSystem.Styles.STRAIGHT),  # All on go straight
     (1, 0, 1) : (None, DriveSystem.Styles.STRAIGHT),  # Unlikely straight
 }
 
+# robot keeps SPIN-ing until it doesn't all white anymore
 def turn_around(drive, sensor):
 
     drive.drive(DriveSystem.Styles.SPIN, DriveSystem.Directions.RIGHT)
@@ -39,19 +42,26 @@ def run(drive, sensor):
         reading = sensor.read()
         action = FEEDBACK_LAW[reading]
 
+        # if robot sees all white, get average of previous readings 
         if action is None:
             current_average = sensor.get_average()
             print (current_average)
 
+            # "driving straight on line" behavior, so robot is at end of tape
             if current_average == [0, 1, 0]:
                 turn_around(drive, sensor)
+            
+            # Robot was pushed to the LEFT since right sensor detects black tape majority of the time 
             elif current_average[2] == 1:
                 drive.drive(DriveSystem.Styles.SPIN, DriveSystem.Directions.RIGHT)
+
+            # Robot was pushed to the RIGHT since left sensor detects black tape majority of the time 
             elif current_average[0] == 1:
                 drive.drive(DriveSystem.Styles.SPIN, DriveSystem.Directions.LEFT)
             else:
                 turn_around(drive, sensor)
             
+        # all other direction cases in FEEDBACK_LAW
         else:
             direction, style = action
             drive.drive(style, direction)
@@ -66,6 +76,7 @@ def main():
     drive = DriveSystem.DriveSystem(io, PIN_LEFT_MOTOR_1, PIN_LEFT_MOTOR_2,PIN_RIGHT_MOTOR_1, PIN_RIGHT_MOTOR_2)
     sensor = LineSensor.LineSensor(io, PIN_IR_LEFT, PIN_IR_MIDDLE, PIN_IR_RIGHT)
 
+    # Place in a try-except structure, so we can shut down cleanly.
     try:
         run(drive, sensor)
     except BaseException as ex:

@@ -1,12 +1,3 @@
-#
-#   irdemo.py
-#
-#   This shows how to read the IR sensors via the GPIO (general
-#   purpose I/O) pins.  Please use as an example, but change to suit
-#   the goals!
-#
-
-# Imports
 import pigpio
 import sys
 import time
@@ -17,10 +8,6 @@ PIN_IR_LEFT   = 18      # Default GPIO Channel for Left   IR Detector
 PIN_IR_MIDDLE = 15      # Default GPIO Channel for Middle IR Detector
 PIN_IR_RIGHT  = 14      # Default GPIO Channel for Right  IR Detector
 
-
-#
-#   Main
-#
 if __name__ == "__main__":
 
     # Prepare the GPIO interface/connection (to command the motors).
@@ -39,10 +26,9 @@ if __name__ == "__main__":
     print("Sensors ready...")
 
 
-    # Read.
     # Place in a try-except structure, so we can shut down cleanly.
     try:
-        # Example: Continually read and report all three pins.
+        # Continually read and report all three pins.
         while True:
             irl = io.read(PIN_IR_LEFT)
             irm = io.read(PIN_IR_MIDDLE)
