@@ -45,6 +45,9 @@ class LineSensor:
     def get_average(self, threshold = 0.1):
         total = [0, 0, 0]
         
+        if len(self.buffer) == 0:
+            return [0, 0, 0]
+        
         # adds all the readings for each sensor and stores as a tuple
         for i in range(len(self.buffer)):
             for j in range(3):
@@ -54,7 +57,6 @@ class LineSensor:
         # Did it see black majority of the time or white?
         average = [0, 0, 0]
         for i in range(3):
-
             # only make average 1 if it sees it for more than thresshold
             if total[i]/len(self.buffer) >= threshold:
                 average[i] = 1
