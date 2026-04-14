@@ -18,11 +18,29 @@ class LineSensor:
     def read(self):
         reading = (self.IR_1.read(), self.IR_2.read(), self.IR_3.read())
 
+        if reading == (0, 0, 0):
+            return reading
+
         self.buffer.append(reading)
         if len(self.buffer) > self.BUFFER_LENGTH:
             self.buffer.pop(0)
+        else:
+            return reading
 
         return reading 
 
-    def get_average(self):
-        return [round(sum([self.buffer[i][j] for i in range(len(self.buffer))])/len(self.buffer)) for j in range(3)]
+    def get_average(self, threshold = 0.1):
+        total = [0, 0, 0]
+        for i in range(len(self.buffer)):
+            for j in range(3):
+                total[j] += self.buffer[j]
+
+        average = [0, 0, 0]
+        for i in range(3):
+            if total[i]/len(self.buffer) >= threshold:
+                average[i] = 1
+
+
+        return average
+
+        
